@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>zkSNARK</title>
+    </head>
+    <body>
+        <h1>zk-dApp example</h1>
+
+        <label for="age">What's your age?</label>
+        <input type="text" id="age" name="age">
+        <button id="btnCreateProof">Create zk-proof</button>
+
+        <h3 class="proof">Proof: <code id="proof"></code></h3>
+        <h3 class="proof">Result: <code id="result"></code></h3>
+
+        <script src="snarkjs.js"></script>
+
+        <script>
+            const proofComponent = document.getElementById('proof');
+            const resultComponent = document.getElementById('result');
+            const btnCreateProof = document.getElementById('btnCreateProof');
+
+            btnCreateProof.addEventListener('click', calculateProof);
+
+            async function calculateProof() {
+                const age = document.getElementById('age').value;
+                const input = { age: age, ageLimit: 18 };
+                // fullProve - built in SnarkJS function
+                const { proof, publicSignals } = await snarkjs.groth16.fullProve(
+                    input,
+                    '../circuits/ageCheck.wasm',
+                    '../circuits/ageCheck.zkey'
+                );
+                console.log(proof.protocol);
+                console.log(proof.curve);
+                console.log(publicSignals);
+                // exportSolidityCallData - built in SnarkJS function
+                const callData = await snarkjs.groth16.exportSolidityCallData(
+                    proof,
+                    publicSignals,
+                );
+
+                proofComponent.innerHTML = callData;
+
+                const vkey = await fetch('../circuits/ageCheck.vkey.json').then(function(res) {
+                    return res.json();
+                })
+                // verify - built in SnarkJS function to verify proof
+                const res = await snarkjs.groth16.verify(vkey, ['1', '18'], proof);
+
+                resultComponent.innerHTML = res;
+            }
+        </script>
+    </body>
+</html>
