@@ -1,6 +1,6 @@
 ## Summary
 
-Proof itself does not reveal the age entered by the user.
+Privacy for decentralized application - Zero-Knowledge Proof. Proof itself does not reveal the age entered by the user.
 
 ## Technology
 
