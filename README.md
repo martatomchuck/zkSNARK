@@ -1,3 +1,3 @@
-Privacy for decentralized application - Zero-Knowledge Proof. 
-Proof itself does not reveal the age entered by the user.
-Proof is generated based on Circom circuits and Snark.js
+#### Privacy for a decentralized application using Zero-Knowledge Proofs (ZKPs).
+
+The proof itself does not reveal the age provided by the user. It is generated using Circom circuits and snarkjs.
